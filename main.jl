@@ -15,9 +15,8 @@ include("CBs.jl")
 function main()
 
     # Load Error Producing State Vectors 
-    # (Each row of data frame contains an error producing state vector)
     df = collect_results(projectdir("Error_Prod_States"))
-    x0 = df.x0[2][1:14]
+    x0 = df.x0[1][1:14]
 
     # Boundary Conditions
     BCi = [-0.019488511458668, -0.016033479812051, 0.0,
