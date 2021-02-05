@@ -4,8 +4,8 @@ function CR3BPIMF_ShootingFunction_STM!(F::Union{Nothing,AbstractArray}, J::Unio
     ps = deepcopy(params)
 
     # Time Span
-    tspan = (0.0, params.TOF*3600*24 / params.eom.TU)
-
+    tspan = (0.0, ps.TOF*3600*24 / ps.eom.TU)
+    
     # Initial State Vector
     x0 = Array([view(ps.BCs,:,1); λ; zeros(196)])
     @inbounds for i in 1:14
@@ -50,7 +50,9 @@ function CR3BPIMF_ShootingFunction_STM!(F::Union{Nothing,AbstractArray}, J::Unio
     end
 
     # Solve
-    sol = solve(prob,
+
+    sol = try
+        solve(prob,
                 alg,
                 reltol=1e-14, 
                 abstol=1e-14, 
@@ -59,6 +61,9 @@ function CR3BPIMF_ShootingFunction_STM!(F::Union{Nothing,AbstractArray}, J::Unio
                 maxiters=Inf, 
                 verbose=true
                 ) 
+    catch
+        safesave(projectdir("Error_Prod_States","states.bson"), Dict(:x0 => x0))
+    end
 
     if !(F === nothing)
         @inbounds for i in 1:6

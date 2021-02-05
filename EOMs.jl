@@ -1,8 +1,6 @@
 # Circular Restricted Three Body Problem EOM with Indirect Min Fuel Control
 function CR3BPIMF_EOM!(dx, x, params::CR3BPIMF_Params, t)
 
-    print(t)
-
     # Compute Requirements
     @fastmath r1      = sqrt((x[1] + params.eom.μ)^2 + x[2]^2 + x[3]^2)
     @fastmath r2      = sqrt((x[1] + params.eom.μ - 1)^2 + x[2]^2 + x[3]^2)
